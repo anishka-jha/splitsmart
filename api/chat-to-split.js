@@ -13,7 +13,10 @@ export default async function handler(req,res){
  if(origin){try{if(new URL(origin).host!==host)return res.status(403).json({error:'Use Chat-to-Split from this website.'});}catch{return res.status(403).json({error:'Invalid request origin.'});}}
  let input;
  try{input=validateChatRequest(req.body);}catch(err){return res.status(400).json({error:err.message});}
- const token=process.env.AI_GATEWAY_API_KEY||process.env.VERCEL_OIDC_TOKEN;
+ // Deployed functions receive fresh OIDC credentials in the platform request
+ // header; environment OIDC is for local development/builds. Never cache it.
+ const runtimeToken=process.env.VERCEL==='1'?req.headers['x-vercel-oidc-token']:undefined;
+ const token=process.env.AI_GATEWAY_API_KEY||(typeof runtimeToken==='string'?runtimeToken:undefined)||process.env.VERCEL_OIDC_TOKEN;
  if(!token)return res.status(503).json({error:'AI is not configured on this server. You can still add expenses manually.',code:'AI_NOT_CONFIGURED'});
  const ip=String(req.headers['x-vercel-forwarded-for']||req.headers['x-forwarded-for']||req.socket?.remoteAddress||'local').split(',')[0];
  if(!allow(ip)){res.setHeader('Retry-After','60');return res.status(429).json({error:'Too many drafts. Wait a minute and try again.'});}
