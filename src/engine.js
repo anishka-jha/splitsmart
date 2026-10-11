@@ -1,4 +1,11 @@
 export const id = () => crypto.randomUUID();
+export const paidAmounts = e => e.paidBy || {[e.payer]:e.amount};
+export function validatePaidBy(total,paidBy,members){
+ const entries=Object.entries(paidBy);
+ if(!entries.length||entries.some(([k,v])=>!members.some(m=>m.id===k)||!Number.isSafeInteger(v)||v<=0))throw Error('Enter valid contributions for at least one payer.');
+ if(entries.reduce((s,[,v])=>s+v,0)!==total)throw Error('Payer contributions must add up to the bill total.');
+ return paidBy;
+}
 export function cents(value) { const n=Number(value); if(!Number.isFinite(n)||n<0) throw Error('Enter a valid positive amount.'); return Math.round(n*100); }
 export function allocate(total, ids, weights=ids.map(()=>1)) {
  if(!ids.length) throw Error('Select at least one person.');
@@ -23,7 +30,7 @@ export function splitExpense(total, mode, selected, values={}, items=[]) {
 }
 export function balances(group) {
  const b=Object.fromEntries(group.members.map(m=>[m.id,0]));
- group.expenses.forEach(e=>{b[e.payer]=(b[e.payer]||0)+e.amount;Object.entries(e.shares).forEach(([k,v])=>b[k]=(b[k]||0)-v);});
+ group.expenses.forEach(e=>{Object.entries(paidAmounts(e)).forEach(([k,v])=>b[k]=(b[k]||0)+v);Object.entries(e.shares).forEach(([k,v])=>b[k]=(b[k]||0)-v);});
  group.payments.forEach(p=>{b[p.from]=(b[p.from]||0)+p.amount;b[p.to]=(b[p.to]||0)-p.amount;});return b;
 }
 export function simplify(b) {

@@ -4,6 +4,8 @@ A responsive React/Vite expense splitter with a paper-and-lime visual identity. 
 
 ## Run in VS Code
 
+Expenses now support multiple payers. Toggle **Multiple people paid** and enter the amount each person contributed; the contributions must exactly match the bill. Contributions are independent of consumption shares and feed balances, debt simplification and per-member paid totals. This works for every split mode and Fair Upgrade conversion. Old single-payer expenses and backups still work; editing them saves the new contribution format.
+
 Requires Node.js 20.19+ or 22.12+.
 
 ```sh
