@@ -26,8 +26,8 @@ export default function ChatToSplit({g,money,onReview}){
  return <div className="chat-split">
   <div className="upgrade-hero"><span className="eyebrow">TYPE THE STORY. CHECK THE MATH.</span><h2>Group-chat chaos.<br/>One clean expense.</h2><p>Describe a bill in English, Hindi or Hinglish. AI reads the details; you review every amount before saving.</p></div>
   <div className="upgrade-grid"><section className="panel"><h3>01 / Tell us what happened</h3>
-   <form onSubmit={generate}><label>One expense, in your own words<textarea aria-label="Expense message" rows="6" maxLength={3000} value={text} onChange={e=>{cancel();setText(e.target.value);setResult(null);setError('');}} placeholder={example} required/></label>
-    <button type="button" className="new-group" disabled={busy} onClick={()=>{setText(example);setResult(null);setError('');}}>Try a message with your crew ↗</button>
+   <form onSubmit={generate}><label>One expense, in your own words<textarea aria-label="Expense message" rows="6" maxLength={3000} value={text} onChange={e=>{cancel();setText(e.target.value);setReply('');setResult(null);setError('');}} placeholder={example} required/></label>
+    <button type="button" className="new-group" disabled={busy} onClick={()=>{setText(example);setReply('');setResult(null);setError('');}}>Try a message with your crew ↗</button>
     {result?.prepared.questions.length>0&&<div className="chat-questions"><h3>A few details first</h3>{result.prepared.questions.map((q,i)=><p key={i}>{q}</p>)}<label>Your clarification<textarea aria-label="Clarification" rows="3" maxLength={1000} value={reply} onChange={e=>setReply(e.target.value)} required/></label></div>}
     <p className="muted">Only this message, crew names/IDs and group currency are sent to Vercel AI Gateway and its model provider. Your expense history and receipt images are not sent.</p>
     <button className="primary" disabled={busy||!text.trim()}>{busy?'Reading your message…':result?.prepared.questions.length?'Send clarification ↗':'Create expense draft ✦'}</button>{busy&&<button type="button" onClick={cancel}>Cancel</button>}
