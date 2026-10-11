@@ -1,0 +1,11 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {planUpgrade} from '../src/upgrade-engine.js';
+const members=['a','b','c','d'].map(id=>({id}));
+test('two volunteers cover the upgrade; original shares stay protected',()=>{const p=planUpgrade(400000,700000,members,{a:{upgrade:true,max:250000},b:{upgrade:true,max:250000}});assert.equal(p.funded,true);assert.deepEqual(p.shares,{a:250000,b:250000,c:100000,d:100000});});
+test('limits alone never authorize extra charges',()=>{const p=planUpgrade(400000,700000,members,{a:{max:900000},b:{max:900000}});assert.equal(p.funded,false);assert.equal(p.shortfall,300000);assert.deepEqual(p.extras,{a:0,b:0,c:0,d:0});});
+test('volunteer limits cap allocations and redistribute remaining extra',()=>{const p=planUpgrade(400000,700000,members,{a:{upgrade:true,max:150000},b:{upgrade:true,max:350000}});assert.equal(p.funded,true);assert.equal(p.shares.a,150000);assert.equal(p.shares.b,350000);});
+test('sponsorship capacity can fund an upgrade without upgrade opt-in',()=>{const p=planUpgrade(400000,700000,members,{c:{max:400000,sponsor:300000}});assert.equal(p.funded,true);assert.equal(p.shares.c,400000);assert.equal(p.shares.a,100000);});
+test('partial sponsorship displays shortfall; low baseline limit blocks conversion',()=>{assert.equal(planUpgrade(400000,700000,members,{a:{max:200000,sponsor:100000}}).shortfall,200000);assert.equal(planUpgrade(400000,400000,members,{a:{max:90000}}).funded,false);});
+test('one-cent upgrade conserves total and protected shares',()=>{const p=planUpgrade(401,402,members,{a:{upgrade:true,max:200},b:{upgrade:true,max:200}});assert.equal(Object.values(p.shares).reduce((s,v)=>s+v,0),402);assert.equal(p.extras.c,0);assert.equal(p.extras.d,0);});
+test('reject invalid costs and contribution limits',()=>{assert.throws(()=>planUpgrade(400,399,members));assert.throws(()=>planUpgrade(0,700,members));assert.throws(()=>planUpgrade(400,700,members,{a:{max:-1}}));});

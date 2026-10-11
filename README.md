@@ -40,6 +40,14 @@ Alternatively run `npx vercel` from this folder and follow the account/project p
 
 ## Persistence and boundaries
 
+## Fair Upgrade
+
+Open **Fair Upgrade** to protect an agreed baseline while comparing pricier options. Enter the baseline and alternative costs, then record each member's upgrade opt-in, maximum total, or voluntary extra sponsorship. Limits alone never authorize extra charges. The engine splits the baseline equally and distributes upgrade costs evenly among volunteers subject to their contribution limits, redistributing any remaining amount to volunteers with capacity. An unfunded plan cannot become an expense.
+
+The comparison shows each person's baseline, extra contribution, final share and an equal-split comparison. Every member must confirm their final share before conversion; changing the plan resets these confirmations. Draft proposals persist locally. Conversion creates a regular editable exact-split expense with the agreement breakdown attached, which feeds existing balances and analytics. This is a shared-device prototype: confirmations are entered on this device, not authenticated remote approvals. Maximum contributions are visible on this shared device.
+
+Example: baseline 4,000, option 7,000, four people. Two upgrade volunteers with maximum totals of 2,500 each pay 2,500 each; the other two keep their original 1,000 shares. Drag the what-if slider to see funding and shares respond. Offers and limits are capacities, not automatic charges. Record only completed purchases as expenses.
+
 Data is saved in this browser's localStorage. There is no server account, authentication or multi-device sync. A deployed URL hosts the app; each browser keeps independent data. Export backups before clearing browser storage. Currency is selected per group and locked once transactions exist; no FX conversion is performed. Receipts are limited to 1.5 MB each to reduce storage pressure. Payments are accounting entries and do not send money. Greedy simplification reduces payment edges but does not guarantee the mathematical minimum in every case.
 
 ## Project
